@@ -1,0 +1,85 @@
+<template>
+    <lightning-card title="Document Management" icon-name="standard:document">
+
+        <div class="slds-p-around_medium">
+
+            
+            <div class="slds-grid slds-wrap slds-gutters slds-m-bottom_medium">
+
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
+                    <lightning-input
+                        type="search"
+                        label="Search Documents"
+                        placeholder="Search by name, vendor or document number"
+                        onchange={handleSearch}>
+                    </lightning-input>
+                </div>
+
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
+                    <lightning-combobox
+                        label="Document Type"
+                        value={selectedType}
+                        options={typeOptions}
+                        onchange={handleTypeFilter}>
+                    </lightning-combobox>
+                </div>
+
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
+                    <lightning-combobox
+                        label="Processing Status"
+                        value={selectedStatus}
+                        options={statusOptions}
+                        onchange={handleStatusFilter}>
+                    </lightning-combobox>
+                </div>
+
+            </div>
+
+          
+            <div class="slds-m-bottom_small slds-text-align_right">
+                <lightning-button-icon
+                    icon-name="utility:refresh"
+                    alternative-text="Refresh"
+                    title="Refresh Documents"
+                    onclick={handleRefresh}>
+                </lightning-button-icon>
+            </div>
+
+          
+            <template if:true={isLoading}>
+                <lightning-spinner
+                    alternative-text="Loading documents"
+                    size="medium">
+                </lightning-spinner>
+            </template>
+
+      
+            <template if:true={error}>
+                <div class="slds-text-color_error slds-p-around_small">
+                    Unable to load documents. Please refresh the page.
+                </div>
+            </template>
+
+        
+            <template if:false={isLoading}>
+                <template if:false={error}>
+                    <lightning-datatable
+                        key-field="Id"
+                        data={filteredDocuments}
+                        columns={columns}
+                        hide-checkbox-column
+                        onsort={handleSort}>
+                    </lightning-datatable>
+
+                    <template if:true={showNoRecords}>
+                        <div class="slds-align_absolute-center slds-p-around_medium">
+                            No documents found.
+                        </div>
+                    </template>
+                </template>
+            </template>
+
+        </div>
+
+    </lightning-card>
+</template>
